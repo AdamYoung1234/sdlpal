@@ -282,3 +282,7 @@ emscripten/*.cpp
 
 # macOS Trashes
 *.DS_Store
+
+switch/*.nro
+switch/*.elf
+switch/*.nacp

@@ -23,12 +23,17 @@
 
 static void init_filter()
 {
-	SDL_N3DSKeyBind(KEY_A, SDLK_RETURN);
-	SDL_N3DSKeyBind(KEY_B, SDLK_ESCAPE);
-	SDL_N3DSKeyBind(KEY_CPAD_UP, SDLK_UP);
-	SDL_N3DSKeyBind(KEY_CPAD_DOWN, SDLK_DOWN);
-	SDL_N3DSKeyBind(KEY_CPAD_LEFT, SDLK_LEFT);
-	SDL_N3DSKeyBind(KEY_CPAD_RIGHT, SDLK_RIGHT);
+	#ifdef __SWITCH__
+		// aklsjdslakdkjasldjaslkdjkl();
+	#endif
+
+
+	// SDL_N3DSKeyBind(KEY_A, SDLK_RETURN);
+	// SDL_N3DSKeyBind(KEY_B, SDLK_ESCAPE);
+	// SDL_N3DSKeyBind(KEY_CPAD_UP, SDLK_UP);
+	// SDL_N3DSKeyBind(KEY_CPAD_DOWN, SDLK_DOWN);
+	// SDL_N3DSKeyBind(KEY_CPAD_LEFT, SDLK_LEFT);
+	// SDL_N3DSKeyBind(KEY_CPAD_RIGHT, SDLK_RIGHT);
 }
 
 BOOL

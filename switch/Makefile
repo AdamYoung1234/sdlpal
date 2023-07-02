@@ -55,7 +55,7 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	`$(PREFIX)pkg-config --cflags sdl2 SDL2_mixer SDL2_image` -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES) -I.. -I../.. -I../../timidity
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DPAL_HAS_PLATFORM_SPECIFIC_UTILS
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
