@@ -467,7 +467,7 @@ main(
 
 --*/
 {
-#if !defined( __EMSCRIPTEN__ ) && !defined(__WINRT__) && !defined(__N3DS__)
+#if !defined( __EMSCRIPTEN__ ) && !defined(__WINRT__) && !defined(__N3DS__) &&!defined(__SWITCH__)
    memset(gExecutablePath,0,PAL_MAX_PATH);
    strncpy(gExecutablePath, argv[0], PAL_MAX_PATH);
 #endif
@@ -495,8 +495,11 @@ main(
 	   TerminateOnError("Could not initialize SDL: %s.\n", SDL_GetError());
    }
 
+#ifndef __SWITCH__
    PAL_LoadConfig(TRUE);
-
+#else
+   PAL_LoadConfig(FALSE);
+#endif
    //
    // Platform-specific initialization
    //
@@ -514,12 +517,13 @@ main(
    if (PAL_HAS_CONFIG_PAGE && gConfig.fLaunchSetting)
 	   return 0;
 
+#ifndef __SWITCH__
    //
    // If user requests a file-based log, then add it after the system-specific one.
    //
    if (gConfig.pszLogFile)
 	   UTIL_LogAddOutputCallback(UTIL_LogToFile, gConfig.iLogLevel);
-
+#endif
    //
    // Initialize everything
    //

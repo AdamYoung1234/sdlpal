@@ -61,6 +61,10 @@ UTIL_Platform_Init(
 {
 	PAL_RegisterInputFilter(init_filter, NULL, NULL);
 	gConfig.fLaunchSetting = FALSE;
+   	socketInitializeDefault();
+	nxlinkStdio();
+	romfsInit();
+    chdir("romfs:/");
 	return 0;
 }
 
@@ -69,4 +73,5 @@ UTIL_Platform_Quit(
 	VOID
 )
 {
+	romfsExit();
 }

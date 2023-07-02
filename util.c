@@ -315,6 +315,12 @@ TerminateOnError(
    va_end(argptr);
 
    fprintf(stderr, "\nFATAL ERROR: %s\n", string);
+#ifdef __SWITCH__
+	// prevent it from exit
+	while(appletMainLoop()) {
+
+	}
+#endif
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
    {
@@ -897,6 +903,7 @@ UTIL_LogOutput(
 	...
 )
 {
+#ifndef __SWITCH__
 	va_list    va;
 	time_t     tv = time(NULL);
 	struct tm *tmval = localtime(&tv);
@@ -931,6 +938,17 @@ UTIL_LogOutput(
 			_log_callbacks[id](level, _log_buffer, _log_buffer + PAL_LOG_BUFFER_EXTRA_SIZE - 1);
 		}
 	}
+#else
+	va_list argptr;
+	char string[256];
+
+	// concatenate all the arguments in one string
+	va_start(argptr, fmt);
+	vsnprintf(string, sizeof(string), fmt, argptr);
+	va_end(argptr);
+
+	printf("LOG: %s\n", string);
+#endif
 }
 
 void

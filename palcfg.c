@@ -382,7 +382,6 @@ PAL_LoadConfig(
 		// Magic Desc Message Pos
 		.MagicDescMsgPos	= PAL_XY(102, 0),
 	};
-
 	for (PALCFG_ITEM i = PALCFG_ALL_MIN; i < PALCFG_ALL_MAX; i++) values[i] = gConfigItems[i].DefaultValue;
 
 	if (fFromFile && (fp = UTIL_OpenFileAtPathForMode(PAL_CONFIG_PREFIX, "sdlpal.cfg", "r")))

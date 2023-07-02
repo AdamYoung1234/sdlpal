@@ -283,6 +283,7 @@ emscripten/*.cpp
 # macOS Trashes
 *.DS_Store
 
+switch/romfs/data/pal
 switch/*.nro
 switch/*.elf
 switch/*.nacp
