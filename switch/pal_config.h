@@ -32,7 +32,8 @@
 
 # define PAL_AUDIO_DEFAULT_BUFFER_SIZE   2048
 
-# define PAL_HAS_JOYSTICKS     0
+# define PAL_HAS_JOYSTICKS     1
+# define PAL_HAS_MOUSE         0
 # define PAL_HAS_MP3           0
 # define PAL_HAS_OGG           0
 # define PAL_HAS_OPUS          0
@@ -43,15 +44,12 @@
 # define PAL_DEFAULT_TEXTURE_WIDTH   640
 # define PAL_DEFAULT_TEXTURE_HEIGHT  480
 
-// # define PAL_VIDEO_INIT_FLAGS  ()
-// # define PAL_VIDEO_INIT_FLAGS  (SDL_SWSURFACE | SDL_TOPSCR | SDL_CONSOLEBOTTOM | SDL_FULLSCREEN)
-#  define PAL_VIDEO_INIT_FLAGS  (SDL_WINDOW_SHOWN)
+# define PAL_VIDEO_INIT_FLAGS  (SDL_WINDOW_SHOWN)
 
-// # define PAL_SDL_INIT_FLAGS	   (SDL_INIT_VIDEO | SDL_INIT_AUDIO)
-# define PAL_SDL_INIT_FLAGS	   (SDL_INIT_VIDEO | SDL_INIT_AUDIO)
+# define PAL_SDL_INIT_FLAGS	   (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK)
 
 # define PAL_PLATFORM         "Nintendo Switch"
-# define PAL_CREDIT           "ZephRay"
+# define PAL_CREDIT           "Chen Yang"
 # define PAL_PORTYEAR         "2023"
 
 # define PAL_LARGE           static
@@ -60,6 +58,18 @@
 # define PAL_FILESYSTEM_IGNORE_CASE 0
 
 # define PAL_SCALE_SCREEN   FALSE
+
+// Switch buttons
+#define JOY_A     0
+#define JOY_B     1
+#define JOY_X     2
+#define JOY_Y     3
+#define JOY_PLUS  10
+#define JOY_MINUS 11
+#define JOY_LEFT  12
+#define JOY_UP    13
+#define JOY_RIGHT 14
+#define JOY_DOWN  15
 
 # include <switch.h>
 

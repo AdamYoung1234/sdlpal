@@ -21,19 +21,16 @@
 
 #include "main.h"
 
-static void init_filter()
+static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *state)
 {
-	#ifdef __SWITCH__
-		// aklsjdslakdkjasldjaslkdjkl();
-	#endif
-
-
-	// SDL_N3DSKeyBind(KEY_A, SDLK_RETURN);
-	// SDL_N3DSKeyBind(KEY_B, SDLK_ESCAPE);
-	// SDL_N3DSKeyBind(KEY_CPAD_UP, SDLK_UP);
-	// SDL_N3DSKeyBind(KEY_CPAD_DOWN, SDLK_DOWN);
-	// SDL_N3DSKeyBind(KEY_CPAD_LEFT, SDLK_LEFT);
-	// SDL_N3DSKeyBind(KEY_CPAD_RIGHT, SDLK_RIGHT);
+	if(lpEvent->type == SDL_JOYBUTTONDOWN) {
+		TerminateOnError("Good!!!\n");
+		SDL_Quit();
+	}
+	switch (lpEvent->type)
+	{
+	}
+	return 0;
 }
 
 BOOL
@@ -59,7 +56,7 @@ UTIL_Platform_Init(
 	char* argv[]
 )
 {
-	PAL_RegisterInputFilter(init_filter, NULL, NULL);
+	PAL_RegisterInputFilter(NULL, input_event_filter, NULL);
 	gConfig.fLaunchSetting = FALSE;
    	socketInitializeDefault();
 	nxlinkStdio();
@@ -74,4 +71,5 @@ UTIL_Platform_Quit(
 )
 {
 	romfsExit();
+	// TODO: deinitialize most stuff here
 }
