@@ -471,7 +471,11 @@ VIDEO_UpdateScreen(
 --*/
 {
    SDL_Rect        srcrect, dstrect;
+#ifndef __SWITCH__
    short           offset = 240 - 200;
+#else
+   short           offset = 0;
+#endif
    short           screenRealHeight = gpScreenReal->h;
    short           screenRealY = 0;
 

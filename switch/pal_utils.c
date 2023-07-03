@@ -21,14 +21,72 @@
 
 #include "main.h"
 
+/*
+static const int g_KeyMap[][2] = {
+   { SDLK_UP,        kKeyUp },
+   { SDLK_DOWN,      kKeyDown },
+   { SDLK_LEFT,      kKeyLeft },
+   { SDLK_RIGHT,     kKeyRight },
+   { SDLK_ESCAPE,    kKeyMenu },
+   { SDLK_RETURN,    kKeySearch },
+   { SDLK_PAGEUP,    kKeyPgUp },
+   { SDLK_PAGEDOWN,  kKeyPgDn },
+   { SDLK_HOME,      kKeyHome },
+   { SDLK_END,       kKeyEnd },
+   { SDLK_r,         kKeyRepeat },
+   { SDLK_a,         kKeyAuto },
+   { SDLK_d,         kKeyDefend },
+   { SDLK_e,         kKeyUseItem },
+   { SDLK_w,         kKeyThrowItem },
+   { SDLK_q,         kKeyFlee },
+   { SDLK_f,         kKeyForce },
+   { SDLK_s,         kKeyStatus }
+};
+*/
+
+/*
+// Switch buttons
+#define JOY_A     0
+#define JOY_B     1
+#define JOY_X     2
+#define JOY_Y     3
+#define JOY_PLUS  10
+#define JOY_MINUS 11
+#define JOY_LEFT  12
+#define JOY_UP    13
+#define JOY_RIGHT 14
+#define JOY_DOWN  15
+*/
+
 static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *state)
 {
-	if(lpEvent->type == SDL_JOYBUTTONDOWN) {
-		TerminateOnError("Good!!!\n");
-		SDL_Quit();
-	}
-	switch (lpEvent->type)
+	if (lpEvent->type == SDL_JOYBUTTONDOWN)
 	{
+		int button = lpEvent->jbutton.button;
+		switch (button)
+		{
+			case JOY_UP:
+				state->dwKeyPress = kKeyUp;
+				break;
+			case JOY_DOWN:
+				state->dwKeyPress = kKeyDown;
+				break;
+			case JOY_LEFT:
+				state->dwKeyPress = kKeyLeft;
+				break;
+			case JOY_RIGHT:
+				state->dwKeyPress = kKeyRight;
+				break;
+			case JOY_A:
+				state->dwKeyPress |= kKeySearch;
+				break;
+			case JOY_B:
+				state->dwKeyPress |= kKeyMenu;
+				break;	
+			case JOY_PLUS:
+				state->dwKeyPress |= kKeyMenu;
+				break;
+		}
 	}
 	return 0;
 }
