@@ -514,13 +514,12 @@ main(
    if (PAL_HAS_CONFIG_PAGE && gConfig.fLaunchSetting)
 	   return 0;
 
-#ifndef __SWITCH__
    //
    // If user requests a file-based log, then add it after the system-specific one.
    //
    if (gConfig.pszLogFile)
 	   UTIL_LogAddOutputCallback(UTIL_LogToFile, gConfig.iLogLevel);
-#endif
+
    //
    // Initialize everything
    //

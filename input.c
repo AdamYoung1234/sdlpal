@@ -1104,7 +1104,6 @@ PAL_InitInput(
    // Check for joystick
    //
 #if PAL_HAS_JOYSTICKS
-   #ifndef __SWITCH__
    if (SDL_NumJoysticks() > 0 && g_fUseJoystick)
    {
       int i;
@@ -1122,14 +1121,6 @@ PAL_InitInput(
          SDL_JoystickEventState(SDL_ENABLE);
       }
    }
-   #else
-   //TODO: this will only handle railed joycons. need to change
-   SDL_JoystickEventState(SDL_ENABLE);
-   g_pJoy = SDL_JoystickOpen(0);
-   if(g_pJoy == NULL) {
-      TerminateOnError("Fail to init joycon!\n");
-   }
-   #endif
 #endif
 
    input_init_filter();

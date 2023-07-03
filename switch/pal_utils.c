@@ -154,8 +154,6 @@ UTIL_Platform_Init(
 {
 	PAL_RegisterInputFilter(NULL, input_event_filter, NULL);
 	gConfig.fLaunchSetting = FALSE;
-   	socketInitializeDefault();
-	nxlinkStdio();
 	romfsInit();
 	return 0;
 }
@@ -166,6 +164,4 @@ UTIL_Platform_Quit(
 )
 {
 	romfsExit();
-	socketExit();
-	// TODO: deinitialize most stuff here
 }
