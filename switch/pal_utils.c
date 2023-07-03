@@ -138,5 +138,6 @@ UTIL_Platform_Quit(
 )
 {
 	romfsExit();
+	socketExit();
 	// TODO: deinitialize most stuff here
 }
