@@ -1123,7 +1123,8 @@ PAL_InitInput(
       }
    }
    #else
-   //TODO: this will only handle railed joycons. need to change
+   //TODO: this will only work for railed joycons or switch pro controller.
+   //      may need to have a better implementation
    SDL_JoystickEventState(SDL_ENABLE);
    g_pJoy = SDL_JoystickOpen(0);
    if(g_pJoy == NULL) {
