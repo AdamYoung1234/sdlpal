@@ -26,7 +26,6 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 	if (lpEvent->type == SDL_JOYBUTTONDOWN)
 	{
 		int button = lpEvent->jbutton.button;
-		printf("Pressed button: %d\n", button);
 		switch (button)
 		{
 			case JOY_UP:
