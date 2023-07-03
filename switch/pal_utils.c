@@ -26,25 +26,26 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 	if (lpEvent->type == SDL_JOYBUTTONDOWN)
 	{
 		int button = lpEvent->jbutton.button;
+		printf("Pressed button: %d", button);
 		switch (button)
 		{
 			case JOY_UP:
-            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
             	state->dir = kDirNorth;
             	g_InputState.dwKeyPress = kKeyUp;
 				break;
 			case JOY_DOWN:
-            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
             	state->dir = kDirSouth;
             	state->dwKeyPress = kKeyDown;
 				break;
 			case JOY_LEFT:
-         		state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+         		state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
             	state->dir = kDirWest;
             	state->dwKeyPress = kKeyLeft;
 				break;
 			case JOY_RIGHT:
-            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
             	state->dir = kDirEast;
             	state->dwKeyPress = kKeyRight;
 				break;
@@ -54,9 +55,37 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 			case JOY_B:
 				state->dwKeyPress |= kKeyMenu;
 				break;
-			case JOY_PLUS:
-				state->dwKeyPress |= kKeyMenu;
+			case JOY_X:
+				state->dwKeyPress |= kKeyRepeat;
 				break;
+			case JOY_Y:
+				state->dwKeyPress |= kKeyForce;
+				break;
+			case JOY_PLUS:
+				state->dwKeyPress |= kKeyUseItem;
+				break;
+			case JOY_MINUS:
+				state->dwKeyPress |= kKeyThrowItem;
+				break;
+			case JOY_L:
+				state->dwKeyPress |= kKeyAuto;
+				break;
+			case JOY_R:
+				state->dwKeyPress |= kKeyDefend;
+				break;
+			case JOY_ZL:
+				state->dwKeyPress |= kKeyPgUp;
+				break;
+			case JOY_ZR:
+				state->dwKeyPress |= kKeyPgDn;
+				break;
+			case JOY_STICKL:
+				state->dwKeyPress |= kKeyFlee;
+				break;
+			case JOY_STICKR:
+				state->dwKeyPress |= kKeyStatus;
+				break;
+			case
 		}
 		return 1;
 	}

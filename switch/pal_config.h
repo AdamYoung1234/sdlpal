@@ -18,8 +18,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-// 3ds/pal_config.h: Nintendo 3DS specific header.
-//          @Author: Lou Yihua <louyihua@21cn.com>, 2017.
+// switch/pal_config.h: Nintendo Switch specific header.
+//          @Author: Chen Yang <adamyoung1234@outlook.com>, 2023.
 //
 
 #ifndef PAL_CONFIG_H
@@ -60,16 +60,22 @@
 # define PAL_SCALE_SCREEN   FALSE
 
 // Switch buttons
-#define JOY_A     0
-#define JOY_B     1
-#define JOY_X     2
-#define JOY_Y     3
-#define JOY_PLUS  10
-#define JOY_MINUS 11
-#define JOY_LEFT  12
-#define JOY_UP    13
-#define JOY_RIGHT 14
-#define JOY_DOWN  15
+#define JOY_A      0
+#define JOY_B      1
+#define JOY_X      2
+#define JOY_Y      3
+#define JOY_STICKL 4
+#define JOY_STICKR 5
+#define JOY_L      6
+#define JOY_R      7
+#define JOY_ZL     8
+#define JOY_ZR     9
+#define JOY_PLUS   10
+#define JOY_MINUS  11
+#define JOY_LEFT   12
+#define JOY_UP     13
+#define JOY_RIGHT  14
+#define JOY_DOWN   15
 
 # include <switch.h>
 
