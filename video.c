@@ -170,6 +170,7 @@ VIDEO_Startup(
 #endif
 	
    gRenderBackend.Init();
+
    //
    // Before we can render anything, we need a window and a renderer.
    //
