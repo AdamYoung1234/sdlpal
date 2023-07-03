@@ -157,6 +157,7 @@ UTIL_Platform_Init(
    	socketInitializeDefault();
 	nxlinkStdio();
 	romfsInit();
+	chdir("romfs:/");
 	return 0;
 }
 

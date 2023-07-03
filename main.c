@@ -495,7 +495,11 @@ main(
 	   TerminateOnError("Could not initialize SDL: %s.\n", SDL_GetError());
    }
 
+#ifndef __SWITCH__
    PAL_LoadConfig(TRUE);
+#else
+   PAL_LoadConfig(FALSE);
+#endif
 
    //
    // Platform-specific initialization
