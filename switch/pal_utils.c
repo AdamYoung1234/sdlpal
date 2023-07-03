@@ -85,7 +85,6 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 			case JOY_STICKR:
 				state->dwKeyPress |= kKeyStatus;
 				break;
-			case
 		}
 		return 1;
 	}
