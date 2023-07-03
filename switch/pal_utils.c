@@ -56,16 +56,16 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 				state->dwKeyPress |= kKeyMenu;
 				break;
 			case JOY_X:
-				state->dwKeyPress |= kKeyRepeat;
-				break;
+				state->dwKeyPress |= (gpGlobals->fInBattle ? kKeyRepeat : kKeyUseItem);
+    			break;
 			case JOY_Y:
-				state->dwKeyPress |= kKeyForce;
+				state->dwKeyPress |= (gpGlobals->fInBattle ? kKeyForce : kKeyThrowItem);
 				break;
 			case JOY_PLUS:
-				state->dwKeyPress |= kKeyUseItem;
+				state->dwKeyPress |= kKeyStatus;
 				break;
 			case JOY_MINUS:
-				state->dwKeyPress |= kKeyThrowItem;
+				state->dwKeyPress |= kKeyForce;
 				break;
 			case JOY_L:
 				state->dwKeyPress |= kKeyAuto;
@@ -80,10 +80,10 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 				state->dwKeyPress |= kKeyPgDn;
 				break;
 			case JOY_STICKL:
-				state->dwKeyPress |= kKeyFlee;
+				state->dwKeyPress |= kKeyHome;
 				break;
 			case JOY_STICKR:
-				state->dwKeyPress |= kKeyStatus;
+				state->dwKeyPress |= kKeyFlee;
 				break;
 		}
 		return 1;
