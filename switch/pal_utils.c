@@ -81,12 +81,32 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 		switch (button)
 		{
 			case JOY_UP:
+				if(state->dir == kDirNorth || state->dir == kDirUnknown) {
+					state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
+					state->dir = kDirUnknown;
+					state->dwKeyPress = kKeyNone;
+				}
+				break;
 			case JOY_DOWN:
+				if(state->dir == kDirSouth || state->dir == kDirUnknown) {
+					state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
+					state->dir = kDirUnknown;
+					state->dwKeyPress = kKeyNone;
+				}
+				break;
 			case JOY_LEFT:
+				if(state->dir == kDirWest || state->dir == kDirUnknown) {
+					state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
+					state->dir = kDirUnknown;
+					state->dwKeyPress = kKeyNone;
+				}
+				break;
 			case JOY_RIGHT:
-				state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
-				state->dir = kDirUnknown;
-				state->dwKeyPress = kKeyNone;
+				if(state->dir == kDirEast || state->dir == kDirUnknown) {
+					state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
+					state->dir = kDirUnknown;
+					state->dwKeyPress = kKeyNone;
+				}
 				break;
 		}
 		return 1;
