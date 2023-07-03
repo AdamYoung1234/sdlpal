@@ -57,8 +57,6 @@
 
 # define PAL_FILESYSTEM_IGNORE_CASE 0
 
-# define PAL_SCALE_SCREEN   TRUE
-
 // Switch buttons
 #define JOY_A      0
 #define JOY_B      1
