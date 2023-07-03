@@ -37,15 +37,16 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	Pal
 BUILD		:=	build
 SOURCES		:=	. .. ../adplug ../libmad ../timidity
 DATA		:=	data
 INCLUDES	:=	include
 ROMFS		:=	romfs
+ICON		:=	icon.jpg
 
 APP_TITLE   := Pal
-APP_AUTHOR  := SoftStar
+APP_AUTHOR  := Chen
 
 #---------------------------------------------------------------------------------
 # options for code generation
