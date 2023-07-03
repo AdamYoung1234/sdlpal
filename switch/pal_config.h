@@ -25,10 +25,10 @@
 #ifndef PAL_CONFIG_H
 # define PAL_CONFIG_H
 
-# define PAL_PREFIX            "data/pal/"
-# define PAL_SAVE_PREFIX       "data/pal/"
-# define PAL_CONFIG_PREFIX     "data/pal/"
-# define PAL_SCREENSHOT_PREFIX "data/pal/"
+# define PAL_PREFIX            "data/"
+# define PAL_SAVE_PREFIX       "save/"
+# define PAL_CONFIG_PREFIX     "config/"
+# define PAL_SCREENSHOT_PREFIX "screenshot/"
 
 # define PAL_AUDIO_DEFAULT_BUFFER_SIZE   2048
 
