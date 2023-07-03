@@ -49,7 +49,7 @@
 # define PAL_SDL_INIT_FLAGS	   (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK)
 
 # define PAL_PLATFORM         "Nintendo Switch"
-# define PAL_CREDIT           "SoftStar"
+# define PAL_CREDIT           "Chen Yang"
 # define PAL_PORTYEAR         "2023"
 
 # define PAL_LARGE           static
@@ -57,7 +57,7 @@
 
 # define PAL_FILESYSTEM_IGNORE_CASE 0
 
-# define PAL_SCALE_SCREEN   FALSE
+# define PAL_SCALE_SCREEN   TRUE
 
 // Switch buttons
 #define JOY_A      0
