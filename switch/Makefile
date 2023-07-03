@@ -44,8 +44,8 @@ DATA		:=	data
 INCLUDES	:=	include
 ROMFS		:=	romfs
 
-APP_TITLE   := Pal for Switch
-APP_AUTHOR  := Chen
+APP_TITLE   := Pal
+APP_AUTHOR  := SoftStar
 
 #---------------------------------------------------------------------------------
 # options for code generation

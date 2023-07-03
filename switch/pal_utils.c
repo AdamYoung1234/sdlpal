@@ -22,29 +22,6 @@
 #include "main.h"
 
 /*
-static const int g_KeyMap[][2] = {
-   { SDLK_UP,        kKeyUp },
-   { SDLK_DOWN,      kKeyDown },
-   { SDLK_LEFT,      kKeyLeft },
-   { SDLK_RIGHT,     kKeyRight },
-   { SDLK_ESCAPE,    kKeyMenu },
-   { SDLK_RETURN,    kKeySearch },
-   { SDLK_PAGEUP,    kKeyPgUp },
-   { SDLK_PAGEDOWN,  kKeyPgDn },
-   { SDLK_HOME,      kKeyHome },
-   { SDLK_END,       kKeyEnd },
-   { SDLK_r,         kKeyRepeat },
-   { SDLK_a,         kKeyAuto },
-   { SDLK_d,         kKeyDefend },
-   { SDLK_e,         kKeyUseItem },
-   { SDLK_w,         kKeyThrowItem },
-   { SDLK_q,         kKeyFlee },
-   { SDLK_f,         kKeyForce },
-   { SDLK_s,         kKeyStatus }
-};
-*/
-
-/*
 // Switch buttons
 #define JOY_A     0
 #define JOY_B     1
@@ -66,28 +43,55 @@ static int input_event_filter(const SDL_Event *lpEvent, volatile PALINPUTSTATE *
 		switch (button)
 		{
 			case JOY_UP:
-				state->dwKeyPress = kKeyUp;
+            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+            	state->dir = kDirNorth;
+            	g_InputState.dwKeyPress = kKeyUp;
 				break;
 			case JOY_DOWN:
-				state->dwKeyPress = kKeyDown;
+            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+            	state->dir = kDirSouth;
+            	state->dwKeyPress = kKeyDown;
 				break;
 			case JOY_LEFT:
-				state->dwKeyPress = kKeyLeft;
+         		state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+            	state->dir = kDirWest;
+            	state->dwKeyPress = kKeyLeft;
 				break;
 			case JOY_RIGHT:
-				state->dwKeyPress = kKeyRight;
+            	state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : g_InputState.dir);
+            	state->dir = kDirEast;
+            	state->dwKeyPress = kKeyRight;
 				break;
 			case JOY_A:
 				state->dwKeyPress |= kKeySearch;
 				break;
 			case JOY_B:
 				state->dwKeyPress |= kKeyMenu;
-				break;	
+				break;
 			case JOY_PLUS:
 				state->dwKeyPress |= kKeyMenu;
 				break;
 		}
+		return 1;
 	}
+
+	if (lpEvent->type == SDL_JOYBUTTONUP)
+	{
+		int button = lpEvent->jbutton.button;
+		switch (button)
+		{
+			case JOY_UP:
+			case JOY_DOWN:
+			case JOY_LEFT:
+			case JOY_RIGHT:
+				state->prevdir = (gpGlobals->fInBattle ? kDirUnknown : state->dir);
+				state->dir = kDirUnknown;
+				state->dwKeyPress = kKeyNone;
+				break;
+		}
+		return 1;
+	}
+
 	return 0;
 }
 
