@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2023, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -147,7 +147,7 @@ PAL_OpeningMenu(
          {
             break;
          }
-         wDefaultItem = 1;
+         wDefaultItem = 0;
       }
    }
 
@@ -727,6 +727,8 @@ PAL_InGameMagicMenu(
          break;
       }
 
+      VIDEO_BackupScreen(gpScreen);
+
       if (gpGlobals->g.rgObject[wMagic].magic.wFlags & kMagicFlagApplyToAll)
       {
          gpGlobals->g.rgObject[wMagic].magic.wScriptOnUse =
@@ -773,13 +775,15 @@ PAL_InGameMagicMenu(
             //
             // Draw the cursor on the selected item
             //
-            rect.x = 70 + 78 * wPlayer;
-            rect.y = 193;
-            rect.w = 9;
+            rect.x = 0;
+            rect.y = 158;
+            rect.w = 320;
             rect.h = 6;
 
-            PAL_RLEBlitToSurface(PAL_SpriteGetFrame(gpSpriteUI, SPRITENUM_CURSOR),
-               gpScreen, PAL_XY(rect.x, rect.y));
+            VIDEO_RestoreScreen(gpScreen);
+
+            PAL_RLEBlitToSurface(PAL_SpriteGetFrame(gpSpriteUI, SPRITENUM_CURSOR_UP),
+               gpScreen, PAL_XY(75 + 78 * wPlayer, rect.y));
 
             VIDEO_UpdateScreen(&rect);
 
@@ -1296,7 +1300,7 @@ PAL_ItemUseMenu(
    BYTE           bColor, bSelectedColor;
    PAL_LARGE BYTE bufImage[2048];
    DWORD          dwColorChangeTime;
-   static WORD    wSelectedPlayer = 0;
+   static SHORT   sSelectedPlayer = 0;
    SDL_Rect       rect = {110, 2, 200, 180};
    int            i;
 
@@ -1305,9 +1309,9 @@ PAL_ItemUseMenu(
 
    while (TRUE)
    {
-      if (wSelectedPlayer > gpGlobals->wMaxPartyMemberIndex)
+      if (sSelectedPlayer > gpGlobals->wMaxPartyMemberIndex)
       {
-         wSelectedPlayer = 0;
+         sSelectedPlayer = 0;
       }
 
       //
@@ -1335,7 +1339,7 @@ PAL_ItemUseMenu(
       PAL_DrawText(PAL_GetWord(STATUS_LABEL_FLEERATE), PAL_XY(200, 142),
          ITEMUSEMENU_COLOR_STATLABEL, TRUE, FALSE, FALSE);
 
-      i = gpGlobals->rgParty[wSelectedPlayer].wPlayerRole;
+      i = gpGlobals->rgParty[sSelectedPlayer].wPlayerRole;
 
       PAL_DrawNumber(gpGlobals->g.PlayerRoles.rgwLevel[i], 4, PAL_XY(240, 20),
          kNumColorYellow, kNumAlignRight);
@@ -1370,7 +1374,7 @@ PAL_ItemUseMenu(
       //
       for (i = 0; i <= gpGlobals->wMaxPartyMemberIndex; i++)
       {
-         if (i == wSelectedPlayer)
+         if (i == sSelectedPlayer)
          {
             bColor = bSelectedColor;
          }
@@ -1439,8 +1443,8 @@ PAL_ItemUseMenu(
             // Redraw the selected item.
             //
             PAL_DrawText(
-               PAL_GetWord(gpGlobals->g.PlayerRoles.rgwName[gpGlobals->rgParty[wSelectedPlayer].wPlayerRole]),
-               PAL_XY(125, 16 + 20 * wSelectedPlayer), bSelectedColor, FALSE, TRUE, FALSE);
+               PAL_GetWord(gpGlobals->g.PlayerRoles.rgwName[gpGlobals->rgParty[sSelectedPlayer].wPlayerRole]),
+               PAL_XY(125, 16 + 20 * sSelectedPlayer), bSelectedColor, FALSE, TRUE, FALSE);
          }
 
          PAL_ProcessEvent();
@@ -1460,13 +1464,18 @@ PAL_ItemUseMenu(
 
       if (g_InputState.dwKeyPress & (kKeyUp | kKeyLeft))
       {
-         wSelectedPlayer--;
+         sSelectedPlayer--;
+         if (sSelectedPlayer < 0)
+         {
+            sSelectedPlayer = gpGlobals->wMaxPartyMemberIndex;
+         }
       }
       else if (g_InputState.dwKeyPress & (kKeyDown | kKeyRight))
       {
-         if (wSelectedPlayer < gpGlobals->wMaxPartyMemberIndex)
+         sSelectedPlayer++;
+         if (sSelectedPlayer > gpGlobals->wMaxPartyMemberIndex)
          {
-            wSelectedPlayer++;
+            sSelectedPlayer = 0;
          }
       }
       else if (g_InputState.dwKeyPress & kKeyMenu)
@@ -1475,7 +1484,7 @@ PAL_ItemUseMenu(
       }
       else if (g_InputState.dwKeyPress & kKeySearch)
       {
-         return gpGlobals->rgParty[wSelectedPlayer].wPlayerRole;
+         return gpGlobals->rgParty[sSelectedPlayer].wPlayerRole;
       }
    }
 
@@ -1504,23 +1513,31 @@ PAL_BuyMenu_OnItemChange(
 --*/
 {
    const SDL_Rect      rect = {20, 8, 300, 175};
-   int                 i, n;
+   int                 i, j, n, x, y;
    PAL_LARGE BYTE      bufImage[2048];
 
+   //
+   // Prepare item bakcground box pos
+   //
+   x = 40, y = 8;
+
    if( __buymenu_firsttime_render )
-      PAL_RLEBlitToSurfaceWithShadow(PAL_SpriteGetFrame(gpSpriteUI, SPRITENUM_ITEMBOX), gpScreen, PAL_XY(35+6, 8+6), TRUE);
+      PAL_RLEBlitToSurfaceWithShadow(PAL_SpriteGetFrame(gpSpriteUI, SPRITENUM_ITEMBOX), gpScreen, PAL_XY(x + 6, y + 6), TRUE);
    //
    // Draw the picture of current selected item
    //
    PAL_RLEBlitToSurface(PAL_SpriteGetFrame(gpSpriteUI, SPRITENUM_ITEMBOX), gpScreen,
-      PAL_XY(35, 8));
+      PAL_XY(x, y));
+
+   //
+   // Prepare item pos
+   //
+   x = 48, y = 15;
 
    if (PAL_MKFReadChunk(bufImage, 2048,
       gpGlobals->g.rgObject[wCurrentItem].item.wBitmap, gpGlobals->f.fpBALL) > 0)
    {
-      if( __buymenu_firsttime_render )
-         PAL_RLEBlitToSurfaceWithShadow(bufImage, gpScreen, PAL_XY(42+6, 16+6), TRUE);
-      PAL_RLEBlitToSurface(bufImage, gpScreen, PAL_XY(42, 16));
+      PAL_RLEBlitToSurface(bufImage, gpScreen, PAL_XY(x, y));
    }
 
    //
@@ -1541,25 +1558,43 @@ PAL_BuyMenu_OnItemChange(
       }
    }
 
+   for (i = 0; i < MAX_PLAYER_EQUIPMENTS; i++)
+   {
+      for (j = 0; j < MAX_PLAYER_ROLES; j++)
+      {
+         if (gpGlobals->g.PlayerRoles.rgwEquipment[i][j] == wCurrentItem) n++;
+      }
+   }
+
+   //
+   // Prepare inventory quantities pos
+   //
+   x = 20, y = 100;
+
    if( __buymenu_firsttime_render )
-      PAL_CreateSingleLineBoxWithShadow(PAL_XY(20, 105), 5, FALSE, 6);
+      PAL_CreateSingleLineBoxWithShadow(PAL_XY(x, y), 5, FALSE, 6);
    else
    //
    // Draw the amount of this item in the inventory
    //
-   PAL_CreateSingleLineBoxWithShadow(PAL_XY(20, 105), 5, FALSE, 0);
-   PAL_DrawText(PAL_GetWord(BUYMENU_LABEL_CURRENT), PAL_XY(30, 115), 0, FALSE, FALSE, FALSE);
-   PAL_DrawNumber(n, 6, PAL_XY(69, 119), kNumColorYellow, kNumAlignRight);
+   PAL_CreateSingleLineBoxWithShadow(PAL_XY(x, y), 5, FALSE, 0);
+   PAL_DrawText(PAL_GetWord(BUYMENU_LABEL_CURRENT), PAL_XY(x + 10, y + 10), 0, FALSE, FALSE, FALSE);
+   PAL_DrawNumber(n, 6, PAL_XY(x + 49, y + 15), kNumColorYellow, kNumAlignRight);
+
+   //
+   // Prepare inventory quantities pos
+   //
+   x = 20, y = 141;
 
    if( __buymenu_firsttime_render )
-      PAL_CreateSingleLineBoxWithShadow(PAL_XY(20, 145), 5, FALSE, 6);
+      PAL_CreateSingleLineBoxWithShadow(PAL_XY(x, y), 5, FALSE, 6);
    else
    //
    // Draw the cash amount
    //
-   PAL_CreateSingleLineBoxWithShadow(PAL_XY(20, 145), 5, FALSE, 0);
-   PAL_DrawText(PAL_GetWord(CASH_LABEL), PAL_XY(30, 155), 0, FALSE, FALSE, FALSE);
-   PAL_DrawNumber(gpGlobals->dwCash, 6, PAL_XY(69, 159), kNumColorYellow, kNumAlignRight);
+   PAL_CreateSingleLineBoxWithShadow(PAL_XY(x, y), 5, FALSE, 0);
+   PAL_DrawText(PAL_GetWord(CASH_LABEL), PAL_XY(x + 10, y + 10), 0, FALSE, FALSE, FALSE);
+   PAL_DrawNumber(gpGlobals->dwCash, 6, PAL_XY(x + 49, y + 15), kNumColorYellow, kNumAlignRight);
 
    VIDEO_UpdateScreen(&rect);
    
@@ -1592,7 +1627,7 @@ PAL_BuyMenu(
    //
    // create the menu items
    //
-   y = 22;
+   y = 21;
 
    for (i = 0; i < MAX_STORE_ITEM; i++)
    {
@@ -1612,7 +1647,7 @@ PAL_BuyMenu(
    //
    // Draw the box
    //
-   PAL_CreateBox(PAL_XY(125, 8), 8, 8, 1, FALSE);
+   PAL_CreateBox(PAL_XY(122, 8), 8, 8, 1, FALSE);
 
    //
    // Draw the number of prices
@@ -1620,7 +1655,7 @@ PAL_BuyMenu(
    for (y = 0; y < i; y++)
    {
       w = gpGlobals->g.rgObject[rgMenuItem[y].wValue].item.wPrice;
-      PAL_DrawNumber(w, 6, PAL_XY(235, 25 + y * 18), kNumColorCyan, kNumAlignRight);
+      PAL_DrawNumber(w, 6, PAL_XY(238, 26 + y * 18), kNumColorYellow, kNumAlignRight);
    }
 
    w = 0;
@@ -1682,23 +1717,27 @@ PAL_SellMenu_OnItemChange(
 
 --*/
 {
+   WORD x = 100, y = 150;
+
    //
    // Draw the cash amount
    //
-   PAL_CreateSingleLineBoxWithShadow(PAL_XY(100, 150), 5, FALSE, 0);
-   PAL_DrawText(PAL_GetWord(CASH_LABEL), PAL_XY(110, 160), 0, FALSE, FALSE, FALSE);
-   PAL_DrawNumber(gpGlobals->dwCash, 6, PAL_XY(149, 164), kNumColorYellow, kNumAlignRight);
+   PAL_CreateSingleLineBoxWithShadow(PAL_XY(x, y), 5, FALSE, 0);
+   PAL_DrawText(PAL_GetWord(CASH_LABEL), PAL_XY(x + 10, y + 10), 0, FALSE, FALSE, FALSE);
+   PAL_DrawNumber(gpGlobals->dwCash, 6, PAL_XY(x + 48, y + 15), kNumColorYellow, kNumAlignRight);
+
+   x += 124;
 
    //
    // Draw the price
    //
-   PAL_CreateSingleLineBoxWithShadow(PAL_XY(220, 150), 5, FALSE, 0);
+   PAL_CreateSingleLineBoxWithShadow(PAL_XY(x, y), 5, FALSE, 0);
 
    if (gpGlobals->g.rgObject[wCurrentItem].item.wFlags & kItemFlagSellable)
    {
-      PAL_DrawText(PAL_GetWord(SELLMENU_LABEL_PRICE), PAL_XY(230, 160), 0, FALSE, FALSE, FALSE);
+      PAL_DrawText(PAL_GetWord(SELLMENU_LABEL_PRICE), PAL_XY(x + 10, y + 10), 0, FALSE, FALSE, FALSE);
       PAL_DrawNumber(gpGlobals->g.rgObject[wCurrentItem].item.wPrice / 2, 6,
-         PAL_XY(269, 164), kNumColorYellow, kNumAlignRight);
+         PAL_XY(x + 48, y + 15), kNumColorYellow, kNumAlignRight);
    }
 }
 
@@ -1974,7 +2013,7 @@ PAL_EquipItemMenu(
          iCurrentPlayer--;
          if (iCurrentPlayer < 0)
          {
-            iCurrentPlayer = 0;
+            iCurrentPlayer = gpGlobals->wMaxPartyMemberIndex;
          }
       }
       else if (g_InputState.dwKeyPress & (kKeyDown | kKeyRight))
@@ -1982,7 +2021,7 @@ PAL_EquipItemMenu(
          iCurrentPlayer++;
          if (iCurrentPlayer > gpGlobals->wMaxPartyMemberIndex)
          {
-            iCurrentPlayer = gpGlobals->wMaxPartyMemberIndex;
+            iCurrentPlayer = 0;
          }
       }
       else if (g_InputState.dwKeyPress & kKeyMenu)

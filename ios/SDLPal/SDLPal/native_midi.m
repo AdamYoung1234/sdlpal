@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2022, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -113,7 +113,7 @@ void native_midi_start(NativeMidiSong *song, int looping)
         currentsong = song;
         currentsong->playing = 1;
         [midiPlayer play:^(){
-            if( currentsong ) {
+            if( looping ) {
                 midiPlayer.currentPosition = 0;
                 native_midi_start(currentsong,looping);
             }
@@ -121,7 +121,7 @@ void native_midi_start(NativeMidiSong *song, int looping)
     }
 }
 
-void native_midi_stop()
+void native_midi_stop(NativeMidiSong *song)
 {
     if (currentsong) {
         currentsong->playing = 0;
@@ -129,7 +129,7 @@ void native_midi_stop()
     }
 }
 
-int native_midi_active()
+int native_midi_active(NativeMidiSong *song)
 {
     return currentsong ? currentsong->playing : 0;
 }

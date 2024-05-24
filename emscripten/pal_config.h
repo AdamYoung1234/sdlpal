@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2023, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -51,9 +51,18 @@
 # include <ctype.h>
 # include <sys/time.h>
 
-#define strcasestr(a,b) strstr(toupper((a)),toupper((b)))
+#ifdef __cplusplus
+extern "C" {
+#endif
+char *_stringtolower(char *);
+#ifdef __cplusplus
+}
+#endif
+#define strcasestr(a,b) strstr(_stringtolower((a)),_stringtolower((b)))
 
 #define PAL_HAS_GLSL 1
 #define PAL_HAS_OPUS 0
+
+#define PAL_HAS_PLATFORM_STARTUP 1
 
 #endif

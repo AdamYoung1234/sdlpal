@@ -1,8 +1,8 @@
 SDLPAL
 ======
-[![Travis CI](https://travis-ci.com/sdlpal/sdlpal.svg?branch=master)](https://travis-ci.com/sdlpal/sdlpal)
+[![GitHub CI](https://github.com/sdlpal/sdlpal/actions/workflows/linux.yml/badge.svg)](https://github.com/sdlpal/sdlpal/actions)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/sdlpal/sdlpal?branch=master&svg=true)](https://ci.appveyor.com/project/palxex/sdlpal-itfml)
-[![Download](https://api-prd.cloudsmith.io/badges/version/sdlpal/sdlpal/raw/wii/latest/x/?render=true) ](https://cloudsmith.io/~sdlpal/repos/sdlpal/groups)
+[![Download](https://api-prd.cloudsmith.io/badges/version/sdlpal/sdlpal/raw/win32-msvc/latest/x/?render=true) ](https://cloudsmith.io/~sdlpal/repos/sdlpal/groups)
 
 ***SDLPAL*** is an SDL-based cross-platform reimplementation of the classic Chinese RPG game known as *PAL*.
 
@@ -20,7 +20,7 @@ LICENSE
 SDLPAL was originally created by [Wei Mingzhi](https://github.com/weimzh/) from 2009. Now it is owned by the SDLPAL development team. Please see [AUTHORS](AUTHORS) for full author list.
 ```
 Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-Copyright (c) 2011-2022, SDLPAL development team.
+Copyright (c) 2011-2024, SDLPAL development team.
 All rights reserved.
 ```
 SDLPAL is distributed under the terms of **GNU General Public License, version 3** as published by the [Free Software Foundation](http://www.fsf.org/). See [LICENSE](LICENSE) for details.
@@ -42,6 +42,8 @@ This program made extensive use of the following libraries:
 * Image decoder from [stb](https://github.com/nothings/stb)
 
 This program does **NOT** include any code or data files of the original game, which are proprietary and copyrighted by [SoftStar](http://www.softstar.com.tw/) Inc.
+
+It's recommended to buy the original game from [Steam](https://store.steampowered.com/app/1546570/Sword_and_Fairy/), which contains required data files to run SDLPAL.
 
 ## FAQ
 
@@ -167,14 +169,6 @@ Other platforms
 To be written.
 
 
-Choosing the battle system
-==========================
-
-By default, SDLPAL builds a *"classic"* turn-based battle system which is designed to be 100% the same as the original game.
-
-SDLPAL also provides a revised battle system (***deprecated*** and will be removed in future) which is more exciting yet somewhat harder than the original game. If you prefer this battle system, please define the macro `ENABLE_REVISIED_BATTLE` in *`Makefile`* or in *`common.h`* and recompile the project.
-
-
 Running the game
 ================
 
@@ -216,4 +210,4 @@ If you find any issues of SDLPAL, please feel free to report them to the develop
 Contributing to the game
 ========================
 
-Any original code & documentation contributions are welcomed as long as the contributed code & documentation is licensed under GPL. You can use GitHub's pull request system to submit your changes to the main repository here. But remember, as a step to keep the quality of code, you should write corresponding unit tests before your changes can be merged. The guidance of writting unit tests can be found [here](/tests).
+Any original code & documentation contributions are welcomed as long as the contributed code & documentation is licensed under GPL. You can use GitHub's pull request system to submit your changes to the main repository here. But remember, as a step to keep the quality of code, you should write corresponding unit tests before your changes can be merged. The guidance of writting unit tests can be found [here](https://github.com/sdlpal/sdlpal/tree/master/tests).

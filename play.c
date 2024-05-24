@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2023, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -224,7 +224,7 @@ PAL_GameUpdate(
 
             pos = PAL_XY(x, y);
 
-            if (!PAL_CheckObstacle(pos, TRUE, 0))
+            if (!PAL_CheckObstacleWithRange(pos, TRUE, 0, TRUE))
             {
                //
                // move here
@@ -239,6 +239,11 @@ PAL_GameUpdate(
             wDir = (wDir + 1) % 4;
          }
       }
+   }
+
+   if (--gpGlobals->wChasespeedChangeCycles == 0)
+   {
+      gpGlobals->wChaseRange = 1;
    }
 
    gpGlobals->dwFrameNum++;
@@ -573,15 +578,70 @@ PAL_StartFrame(
       //
       PAL_QuitGame();
    }
+}
 
-   if (--gpGlobals->wChasespeedChangeCycles == 0)
+static inline VOID
+PAL_WaitForKeyInternal(
+   WORD      wTimeOut,
+   BOOL      fAllowAnyKey
+)
+/*++
+  Purpose:
+
+    Wait for any key.
+
+  Parameters:
+
+    [IN]  wTimeOut - the maximum time of the waiting. 0 = wait forever.
+
+    [IN]  fAllowAnyKey - Whether any key are allowed. If no, only KeySearch and KeyMenu allowed.
+
+  Return value:
+
+    None.
+
+--*/
+{
+   DWORD     dwTimeOut = SDL_GetTicks() + wTimeOut;
+
+   PAL_ClearKeyState();
+
+   while (wTimeOut == 0 || !SDL_TICKS_PASSED(SDL_GetTicks(), dwTimeOut))
    {
-      gpGlobals->wChaseRange = 1;
+      UTIL_Delay(5);
+
+      if (g_InputState.dwKeyPress && fAllowAnyKey
+         || g_InputState.dwKeyPress & (kKeySearch | kKeyMenu))
+      {
+         break;
+      }
    }
 }
 
 VOID
 PAL_WaitForKey(
+   WORD      wTimeOut
+)
+/*++
+  Purpose:
+
+    Wait for KeySearch and KeyMenu.
+
+  Parameters:
+
+    [IN]  wTimeOut - the maximum time of the waiting. 0 = wait forever.
+
+  Return value:
+
+    None.
+
+--*/
+{
+   PAL_WaitForKeyInternal(wTimeOut, FALSE);
+}
+
+VOID
+PAL_WaitForAnyKey(
    WORD      wTimeOut
 )
 /*++
@@ -599,17 +659,5 @@ PAL_WaitForKey(
 
 --*/
 {
-   DWORD     dwTimeOut = SDL_GetTicks() + wTimeOut;
-
-   PAL_ClearKeyState();
-
-   while (wTimeOut == 0 || !SDL_TICKS_PASSED(SDL_GetTicks(), dwTimeOut))
-   {
-      UTIL_Delay(5);
-
-      if (g_InputState.dwKeyPress & (kKeySearch | kKeyMenu))
-      {
-         break;
-      }
-   }
+   PAL_WaitForKeyInternal(wTimeOut, TRUE);
 }

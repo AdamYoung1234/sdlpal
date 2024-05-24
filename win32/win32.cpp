@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2023, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -428,6 +428,14 @@ INT_PTR CALLBACK LauncherDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPAR
 typedef LANGID(__stdcall *GETLANGUAGEID)(void);
 
 extern "C" int UTIL_Platform_Startup(int argc, char *argv[]) {
+	// Disable IME
+	ImmDisableIME(0);
+
+	// Defaults log to debug output
+	UTIL_LogAddOutputCallback([](LOGLEVEL, const char* str, const char*)->void {
+		OutputDebugStringA(str);
+	}, PAL_DEFAULT_LOGLEVEL);
+
 	return 0;
 }
 
@@ -436,11 +444,6 @@ extern "C" int UTIL_Platform_Init(int argc, char* argv[])
 	// Try to get Vista+ API at runtime, and falls back to XP's API if not found
 	GETLANGUAGEID GetLanguage = (GETLANGUAGEID)GetProcAddress(GetModuleHandle(TEXT("Kernel32.dll")), "GetThreadUILanguage");
 	if (!GetLanguage) GetLanguage = GetUserDefaultLangID;
-
-	// Defaults log to debug output
-	UTIL_LogAddOutputCallback([](LOGLEVEL, const char* str, const char*)->void {
-		OutputDebugStringA(str);
-	}, PAL_DEFAULT_LOGLEVEL);
 
 	g_hInstance = GetModuleHandle(nullptr);
 	g_wLanguage = GetLanguage();

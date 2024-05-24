@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2023, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -1017,6 +1017,49 @@ PAL_CountItem(
 }
 
 BOOL
+PAL_GetItemIndexToInventory(
+   WORD          wObjectID,
+   INT          *index
+)
+/*++
+  Purpose:
+
+    Search for the specified item in the inventory.
+
+  Parameters:
+
+    [IN]  wObjectID - object number of the item.
+
+    [IN]  index - use a pointer to receive the retrieved inventory index.
+
+  Return value:
+
+    TRUE if found it, FALSE if not found it.
+
+--*/
+{
+   BOOL         fFound = FALSE;
+
+   *index = 0;
+
+   while (*index < MAX_INVENTORY)
+   {
+      if (gpGlobals->rgInventory[*index].wItem == wObjectID)
+      {
+         fFound = TRUE;
+         break;
+      }
+      else if (gpGlobals->rgInventory[*index].wItem == 0)
+      {
+         break;
+      }
+      (*index)++;
+   }
+
+   return fFound;
+}
+
+BOOL
 PAL_AddItemToInventory(
    WORD          wObjectID,
    INT           iNum
@@ -1057,19 +1100,7 @@ PAL_AddItemToInventory(
    //
    // Search for the specified item in the inventory
    //
-   while (index < MAX_INVENTORY)
-   {
-      if (gpGlobals->rgInventory[index].wItem == wObjectID)
-      {
-         fFound = TRUE;
-         break;
-      }
-      else if (gpGlobals->rgInventory[index].wItem == 0)
-      {
-         break;
-      }
-      index++;
-   }
+   fFound = PAL_GetItemIndexToInventory(wObjectID, &index);
 
    if (iNum > 0)
    {
@@ -2126,7 +2157,7 @@ PAL_RemoveMagic(
    }
 }
 
-VOID
+BOOL
 PAL_SetPlayerStatus(
    WORD         wPlayerRole,
    WORD         wStatusID,
@@ -2151,6 +2182,8 @@ PAL_SetPlayerStatus(
 
 --*/
 {
+   BOOL           fSuccess = TRUE;
+
 #ifndef PAL_CLASSIC
    if (wStatusID == kStatusSlow &&
       gpGlobals->rgPlayerStatus[wPlayerRole][kStatusHaste] > 0)
@@ -2196,10 +2229,16 @@ PAL_SetPlayerStatus(
       //
       // only allow dead players for "puppet" status
       //
-      if (gpGlobals->g.PlayerRoles.rgwHP[wPlayerRole] == 0 &&
-         gpGlobals->rgPlayerStatus[wPlayerRole][wStatusID] < wNumRound)
+      if (gpGlobals->g.PlayerRoles.rgwHP[wPlayerRole] == 0)
       {
-         gpGlobals->rgPlayerStatus[wPlayerRole][wStatusID] = wNumRound;
+         if (gpGlobals->rgPlayerStatus[wPlayerRole][wStatusID] < wNumRound)
+         {
+            gpGlobals->rgPlayerStatus[wPlayerRole][wStatusID] = wNumRound;
+         }
+      }
+      else
+      {
+         fSuccess = FALSE;
       }
       break;
 
@@ -2221,6 +2260,8 @@ PAL_SetPlayerStatus(
       assert(FALSE);
       break;
    }
+
+   return fSuccess;
 }
 
 VOID

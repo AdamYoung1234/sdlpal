@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2023, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -503,9 +503,20 @@ PAL_MakeScene(
 
 BOOL
 PAL_CheckObstacle(
-   PAL_POS         pos,
-   BOOL            fCheckEventObjects,
-   WORD            wSelfObject
+    PAL_POS         pos,
+    BOOL            fCheckEventObjects,
+    WORD            wSelfObject
+)
+{
+    return PAL_CheckObstacleWithRange(pos, fCheckEventObjects, wSelfObject, FALSE);
+}
+
+BOOL
+PAL_CheckObstacleWithRange(
+    PAL_POS         pos,
+    BOOL            fCheckEventObjects,
+    WORD            wSelfObject,
+    BOOL			fCheckRange
 )
 /*++
    Purpose:
@@ -520,6 +531,8 @@ PAL_CheckObstacle(
            check for the map.
 
      [IN]  wSelfObject - the event object which will be skipped.
+
+     [IN]  fCheckRange - whether need to check range.
 
    Return value:
 
@@ -540,6 +553,7 @@ PAL_CheckObstacle(
    //
    // Avoid walk out of range, look out of map
    //
+   if( fCheckRange )
    if (x < blockX || x >= 2048 || y < blockY || y >= 2048 )
    {
       return TRUE;
@@ -688,8 +702,8 @@ PAL_UpdatePartyGestures(
          //
          // Adjust the position if there is obstacle
          //
-         if (PAL_CheckObstacle(PAL_XY(gpGlobals->rgParty[i].x + PAL_X(gpGlobals->viewport),
-            gpGlobals->rgParty[i].y + PAL_Y(gpGlobals->viewport)), TRUE, 0))
+         if (PAL_CheckObstacleWithRange(PAL_XY(gpGlobals->rgParty[i].x + PAL_X(gpGlobals->viewport),
+            gpGlobals->rgParty[i].y + PAL_Y(gpGlobals->viewport)), TRUE, 0, TRUE))
          {
             gpGlobals->rgParty[i].x = gpGlobals->rgTrail[1].x - PAL_X(gpGlobals->viewport);
             gpGlobals->rgParty[i].y = gpGlobals->rgTrail[1].y - PAL_Y(gpGlobals->viewport);
@@ -794,7 +808,7 @@ PAL_UpdateParty(
       //
       // Check for obstacles on the destination location
       //
-      if (!PAL_CheckObstacle(PAL_XY(xTarget, yTarget), TRUE, 0))
+      if (!PAL_CheckObstacleWithRange(PAL_XY(xTarget, yTarget), TRUE, 0, TRUE))
       {
          //
          // Player will actually be moved. Store trail.

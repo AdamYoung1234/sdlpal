@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 4; c-basic-offset: 4; c-file-style: "linux" -*- */
 //
 // Copyright (c) 2009-2011, Wei Mingzhi <whistler_wmz@users.sf.net>.
-// Copyright (c) 2011-2023, SDLPAL development team.
+// Copyright (c) 2011-2024, SDLPAL development team.
 // All rights reserved.
 //
 // This file is part of SDLPAL.
@@ -544,7 +544,7 @@ PAL_AdditionalCredits(
       L" ",
 	  L"    (c) 2009-2011, Wei Mingzhi",
 	  L"        <whistler_wmz@users.sf.net>.",
-      L"    (c) 2011-2021, SDLPAL Team",
+      L"    (c) 2011-2024, SDLPAL Team",
 	  L"%ls",  // Porting information line 1
 	  L"%ls",  // Porting information line 2
 	  L"%ls",  // GNU line 1
@@ -769,11 +769,28 @@ PAL_InterpretInstruction(
          w = gpGlobals->g.PlayerRoles.rgwEquipment[i][wEventObjectID];
          gpGlobals->g.PlayerRoles.rgwEquipment[i][wEventObjectID] = pScript->rgwOperand[1];
 
-         PAL_AddItemToInventory(pScript->rgwOperand[1], -1);
-
-         if (w != 0)
+         if (PAL_GetItemIndexToInventory(pScript->rgwOperand[1], &i)
+            && i < MAX_INVENTORY
+            && gpGlobals->rgInventory[i].nAmount == 1
+            && w != 0
+            && !PAL_GetItemIndexToInventory(w, &j))
          {
-            PAL_AddItemToInventory(w, 1);
+            //
+            // When the number of items you want to wear is 1 
+            // and the number of items you are wearing is also 1, 
+            // replace them directly, instead of removing items 
+            // and adding them at the end of the item menu
+            //
+            gpGlobals->rgInventory[i].wItem = w;
+         }
+         else
+         {
+            PAL_AddItemToInventory(pScript->rgwOperand[1], -1);
+
+            if (w != 0)
+            {
+               PAL_AddItemToInventory(w, 1);
+            }
          }
 
          gpGlobals->wLastUnequippedItem = w;
@@ -1067,6 +1084,7 @@ PAL_InterpretInstruction(
       //
       // Remove equipment from the specified player
       //
+      iPlayerRole = pScript->rgwOperand[0];
       if (pScript->rgwOperand[1] == 0)
       {
          //
@@ -1329,7 +1347,10 @@ PAL_InterpretInstruction(
       //
       // Set the status for player
       //
-      PAL_SetPlayerStatus(wEventObjectID, pScript->rgwOperand[0], pScript->rgwOperand[1]);
+      if (!PAL_SetPlayerStatus(wEventObjectID, pScript->rgwOperand[0], pScript->rgwOperand[1]))
+      {
+         g_fScriptSuccess = FALSE;
+      }
       break;
 
    case 0x002E:
@@ -1916,7 +1937,7 @@ PAL_InterpretInstruction(
       //
       // Jump if player is not poisoned
       //
-      if (!PAL_IsPlayerPoisonedByLevel(wEventObjectID, 1))
+      if (!PAL_IsPlayerPoisonedByLevel(wEventObjectID, 0))
       {
          wScriptEntry = pScript->rgwOperand[0] - 1;
       }
